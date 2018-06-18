@@ -1,0 +1,33 @@
+kind: DeploymentConfig
+apiVersion: v1
+metadata:
+  name: marem-helloworld
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+        - name: hello-world
+          image: devweek-marem/hello-world
+          ports:
+            - containerPort: 80
+  selector:
+    app: hello-world
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange 
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - hello-world
+        from:
+          kind: ImageStreamTag
+          name: hello-world:latest
+  strategy: 
+    type: Rolling
+  paused: false 
+  revisionHistoryLimit: 2 
+  minReadySeconds: 0
